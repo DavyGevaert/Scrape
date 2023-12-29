@@ -101,3 +101,32 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.domain {
+    border: 1px solid;
+    width: 210px;
+    padding: 5px 5px;
+    border-radius: 4px;
+    margin: 20px auto;
+    /*ADDED*/
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    float: left;
+    margin-right: 10px;
+}
+
+.clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+}

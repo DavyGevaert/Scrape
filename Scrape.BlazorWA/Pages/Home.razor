@@ -8,16 +8,18 @@
 
 <PageTitle>Scraper</PageTitle>
 
-<h1>Scrape VDAB website</h1>
+<h1>Vind een job:</h1>
 
 <div>@SearchPattern.URL</div>
 
-@foreach (var str in CheckedDomains){
-    <div>@str</div>
-}
+<div class="clearfix">
+    @foreach (var str in CheckedDomains)
+    {
+        <div class="domain">@str</div>
+    }
+</div>
 
 
-<br/>
 
 <div class="btn-group">
     <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -27,26 +29,27 @@
             
     @foreach (var row in data.GetDomains())
     {
-            <a class="dropdown-item" @onclick="() => Check(row.Domain.Id)">                
+            <div class="dropdown-item" @onclick="() => Check(row.Domain.Id)">                
                 &nbsp;@row.Domain.Title
-            </a>
+            </div>
     }
 
     </div>
 </div>
 
 
+
 @code {
     private SearchPattern SearchPattern { get; set; } = new SearchPattern();
 
-    private IList<string> CheckedDomains { get; set; }
+    private List<string> CheckedDomains { get; set; } = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
         // set standard URL VDAB website search vacancies
         SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
 
-        CheckedDomains = new List<string>();
+        
     }
 
     public void Check(int domainId)
