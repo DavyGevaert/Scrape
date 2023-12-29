@@ -1,0 +1,66 @@
+﻿@page "/"
+
+@using Scrape.Model
+@using Scrape.Data
+
+@inject NavigationManager navManager
+@inject Data data
+
+<PageTitle>Scraper</PageTitle>
+
+<h1>Scrape VDAB website</h1>
+
+<div>@SearchPattern.URL</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Categorie</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in data.GetDomains())
+        {
+            <tr>
+                <td>
+
+                    <input type="checkbox" 
+                           @onchange="() => Check(row.Domain.Id)">
+                    <label>&nbsp;@row.Domain.Title</label>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    private SearchPattern SearchPattern { get; set; } = new SearchPattern();
+
+    protected override async Task OnInitializedAsync()
+    {
+        SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
+    }
+
+    private void Check(int domainId)
+    {
+        // loop through domains
+        foreach (var row in data.GetDomains().Where(r => r.Domain.Id == domainId))
+        {
+            // if SearchPattern.URL has specific domain URLPattern
+            if (SearchPattern.URL.Contains(row.Domain.URLPattern))
+            {
+                // replace that domain URLPattern with empty string
+                SearchPattern.URL = SearchPattern.URL.Replace(row.Domain.URLPattern, "");
+            }
+            else
+            {
+                // add pattern url
+                SearchPattern.URL += row.Domain.URLPattern;
+            }
+        }
+    }
+
+    
+}
