@@ -12,27 +12,24 @@
 
 <div>@SearchPattern.URL</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <td>Categorie</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var row in data.GetDomains())
-        {
-            <tr>
-                <td>
+<br/>
 
-                    <input type="checkbox" 
-                           @onchange="() => Check(row.Domain.Id)">
-                    <label>&nbsp;@row.Domain.Title</label>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="btn-group">
+    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        Action
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            
+    @foreach (var row in data.GetDomains())
+    {
+            <a class="dropdown-item" @onclick="() => Check(row.Domain.Id)">
+                <input type="checkbox">
+                <label>&nbsp;@row.Domain.Title</label>
+            </a>
+    }
 
+    </div>
+</div>
 
 
 @code {
@@ -40,12 +37,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // set standard URL VDAB website search vacancies
         SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
     }
 
     public void Check(int domainId)
     {
-
         // loop through domains
         foreach (var row in data.GetDomains().Where(r => r.Domain.Id == domainId))
         {
