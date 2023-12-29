@@ -1,6 +1,7 @@
 ﻿using Scrape.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Scrape.Data
+namespace Scrape.Data.Helpers
 {
     public class Data
     {
@@ -35,6 +36,26 @@ namespace Scrape.Data
             };
 
             return list;
+        }
+
+        public void Check(string searchPatternURL, int domainId)
+        {
+
+            // loop through domains
+            foreach (var row in GetDomains().Where(r => r.Domain.Id == domainId))
+            {
+                // if SearchPattern.URL has specific domain URLPattern
+                if (searchPatternURL.Contains(row.Domain.URLPattern))
+                {
+                    // replace that domain URLPattern with empty string
+                    searchPatternURL = searchPatternURL.Replace(row.Domain.URLPattern, "");
+                }
+                else
+                {
+                    // add pattern url
+                    searchPatternURL += row.Domain.URLPattern;
+                }
+            }
         }
     }
 }

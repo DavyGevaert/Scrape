@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{9D68E01F-D22E-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrape.BlazorWA", "Scrape.BlazorWA\Scrape.BlazorWA.csproj", "{14C51681-97D2-46D8-9CD4-80CD919EACFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrape.Data", "Scrape.Data\Scrape.Data.csproj", "{F35261B3-D6FD-499B-8009-88E8912FE127}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrape.Data.Helpers", "Scrape.Data\Scrape.Data.Helpers.csproj", "{F35261B3-D6FD-499B-8009-88E8912FE127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

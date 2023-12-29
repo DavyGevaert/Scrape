@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Scrape.Data\Scrape.Data.csproj" />
+    <ProjectReference Include="..\Scrape.Data\Scrape.Data.Helpers.csproj" />
     <ProjectReference Include="..\Scrape.Model\Scrape.Model.csproj" />
   </ItemGroup>
 
