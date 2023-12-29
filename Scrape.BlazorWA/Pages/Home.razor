@@ -12,6 +12,11 @@
 
 <div>@SearchPattern.URL</div>
 
+@foreach (var str in CheckedDomains){
+    <div>@str</div>
+}
+
+
 <br/>
 
 <div class="btn-group">
@@ -22,9 +27,8 @@
             
     @foreach (var row in data.GetDomains())
     {
-            <a class="dropdown-item" @onclick="() => Check(row.Domain.Id)">
-                <input type="checkbox">
-                <label>&nbsp;@row.Domain.Title</label>
+            <a class="dropdown-item" @onclick="() => Check(row.Domain.Id)">                
+                &nbsp;@row.Domain.Title
             </a>
     }
 
@@ -35,10 +39,14 @@
 @code {
     private SearchPattern SearchPattern { get; set; } = new SearchPattern();
 
+    private IList<string> CheckedDomains { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // set standard URL VDAB website search vacancies
         SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
+
+        CheckedDomains = new List<string>();
     }
 
     public void Check(int domainId)
@@ -51,12 +59,16 @@
             {
                 // replace that domain URLPattern with empty string
                 SearchPattern.URL = SearchPattern.URL.Replace(row.Domain.URLPattern, "");
+
+                CheckedDomains.Remove(row.Domain.Title);
             }
             else
             {
                 // add pattern url
                 SearchPattern.URL += row.Domain.URLPattern;
+                CheckedDomains.Add(row.Domain.Title);
             }
+
         }
     }
 }
