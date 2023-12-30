@@ -1,12 +1,14 @@
 ﻿@page "/"
 
-
-
 @using Scrape.Model
 @using Scrape.Data.Helpers
 
+@using OpenQA.Selenium;
+@using OpenQA.Selenium.Chrome;
+@using Scrape.Sdk
+
 @inject Data data;
-@inject HTMLRequest request;
+@inject ScrapeApi scrapeApi;
 
 @inject NavigationManager navManager
 
@@ -19,7 +21,7 @@
 <div class="clearfix">
     @foreach (var str in CheckedDomains)
     {
-        <div class="domain">@str</div>
+        <div class="domain" @onclick="() => ScrapeWebsite()">@str</div>
     }
 </div>
 
@@ -48,28 +50,14 @@
     </div>
 }
 
-
-<script>
-    const puppeteer = require('puppeteer');
-
-    (async () => {
-        try {
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-            await page.goto('https://www.vdab.be/vindeenjob/vacatures?sort=standaard&jobdomein=JOBCAT10');
-            await page.waitForSelector('.body', { timeout: 1000 });
-
-            const body = await page.evaluate(() => {
-                return document.querySelector('body').innerHTML;
-            });
-            console.log(body);
-
-            await browser.close();
-        } catch (error) {
-            console.log(error);
-        }
-    })();
-</script>
+@if (Output is null)
+{
+    <div>Output is loading ...</div>
+}
+else
+{
+    <p>@Output</p>
+}
 
 
 @code {
@@ -79,23 +67,18 @@
 
     private List<Vacancy> Vacancies = new List<Vacancy>();
 
+    private string Output { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-
-
-        // set standard URL VDAB website search vacancies
-        SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
-
-        // await ScrapeWebsite("https://www.vdab.be/vindeenjob/vacatures?sort=standaard&jobdomein=JOBCAT10");
-
+        
     }
 
-    private string Page { get; set; } = "";
-
-    public async Task ScrapeWebsite(string url)
+    public async void ScrapeWebsite()
     {
-        HttpClient client = new HttpClient();
-        Page = await client.GetStringAsync(url);
+        var className = "vej-results";
+                
+        Output = await scrapeApi.GetOutput("https://www.vdab.be/vindeenjob/vacatures/68015340/junior-back-end-software-developer?source=vindeenjob&medium=vacaturedashboard", className);
     }
 
     public async Task Check(int domainId)
@@ -113,7 +96,7 @@
             else
             {
                 // add pattern url
-                SearchPattern.URL += row.Domain.URLPattern;
+                // SearchPattern.URL += row.Domain.URLPattern;
                 CheckedDomains.Add(row.Domain.Title);
             }
         }
