@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Scrape.Data.Helpers
 {
@@ -38,10 +40,7 @@ namespace Scrape.Data.Helpers
 				new Vacancy { Domain = new Domain { Id = 23, Title = "Verkoop", URLPattern = "&jobdomein=JOBCAT23" } },
 				new Vacancy { Domain = new Domain { Id = 24, Title = "Andere", URLPattern = "&jobdomein=JOBCAT24" } }
 			};
-
 			return list;
 		}
-
-		
 	}
 }

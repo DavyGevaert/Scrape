@@ -1,9 +1,13 @@
 ﻿@page "/"
 
+
+
 @using Scrape.Model
 @using Scrape.Data.Helpers
 
 @inject Data data;
+@inject HTMLRequest request;
+
 @inject NavigationManager navManager
 
 <PageTitle>Scraper</PageTitle>
@@ -37,6 +41,35 @@
     </div>
 </div>
 
+@foreach (var vac in Vacancies)
+{   
+    <div>
+        @vac.Title
+    </div>
+}
+
+
+<script>
+    const puppeteer = require('puppeteer');
+
+    (async () => {
+        try {
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto('https://www.vdab.be/vindeenjob/vacatures?sort=standaard&jobdomein=JOBCAT10');
+            await page.waitForSelector('.body', { timeout: 1000 });
+
+            const body = await page.evaluate(() => {
+                return document.querySelector('body').innerHTML;
+            });
+            console.log(body);
+
+            await browser.close();
+        } catch (error) {
+            console.log(error);
+        }
+    })();
+</script>
 
 
 @code {
@@ -44,16 +77,30 @@
 
     private List<string> CheckedDomains { get; set; } = new List<string>();
 
+    private List<Vacancy> Vacancies = new List<Vacancy>();
+
     protected override async Task OnInitializedAsync()
     {
+
+
         // set standard URL VDAB website search vacancies
         SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
 
-        
+        // await ScrapeWebsite("https://www.vdab.be/vindeenjob/vacatures?sort=standaard&jobdomein=JOBCAT10");
+
     }
 
-    public void Check(int domainId)
+    private string Page { get; set; } = "";
+
+    public async Task ScrapeWebsite(string url)
     {
+        HttpClient client = new HttpClient();
+        Page = await client.GetStringAsync(url);
+    }
+
+    public async Task Check(int domainId)
+    {         
+
         // loop through domains
         foreach (var row in data.GetDomains().Where(r => r.Domain.Id == domainId))
         {
@@ -62,8 +109,6 @@
             {
                 // replace that domain URLPattern with empty string
                 SearchPattern.URL = SearchPattern.URL.Replace(row.Domain.URLPattern, "");
-
-                CheckedDomains.Remove(row.Domain.Title);
             }
             else
             {
@@ -71,7 +116,6 @@
                 SearchPattern.URL += row.Domain.URLPattern;
                 CheckedDomains.Add(row.Domain.Title);
             }
-
         }
     }
 }
