@@ -16,6 +16,7 @@ namespace Infrastructuur.Mappers
             {
                 Id = vacancy.Id,
                 Description =   vacancy.Description,
+                // add rest of properties later
             };
         }
     }

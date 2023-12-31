@@ -19,7 +19,7 @@ namespace Infrastructuur.Services.Classes
         public async Task<List<VacancyDescriptionDto>?> JobDescriptionParserAsync(int vacancyAmount, int vacancyNumber)
         {
             var stopwatch = new Stopwatch();
-            var vacancyDescriptionDto = new ConcurrentBag<VacancyDescriptionDto>();
+            var vacancyDescriptionDtoList = new ConcurrentBag<VacancyDescriptionDto>();
             var currentVacancyNumber = vacancyNumber;
 
             var tasks = Enumerable.Range(0, vacancyAmount).Select(async i =>
@@ -42,7 +42,7 @@ namespace Infrastructuur.Services.Classes
                         var productElement = driver.FindElement(By.ClassName(jobDescriptionClassName));
                         if (productElement is not null)
                         {
-                            vacancyDescriptionDto.Add(new VacancyDescriptionDto { Id = localVacancyNumber, Description = productElement.Text });
+                            vacancyDescriptionDtoList.Add(new VacancyDescriptionDto { Id = localVacancyNumber, Description = productElement.Text });
                         }
                     }
                     catch (HtmlParserException ex) 
@@ -51,7 +51,6 @@ namespace Infrastructuur.Services.Classes
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Unhandled exception: {ex.Message}");
                         throw new HtmlParserException("An error occurred during HTML parsing.", ex);
                     }
                 }
@@ -61,7 +60,7 @@ namespace Infrastructuur.Services.Classes
             stopwatch.Stop();
             var timerResult = stopwatch.Elapsed;
 
-            return vacancyDescriptionDto.ToList();
+            return vacancyDescriptionDtoList.ToList();
         }
     }
 }
