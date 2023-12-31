@@ -9,6 +9,6 @@ namespace Scrape.Sdk.Abstractions
 {
     public interface IScrapeApi
     {
-        Task<string> GetString(string url, string className);
+        Task<string> GetString(string url);
     }
 }

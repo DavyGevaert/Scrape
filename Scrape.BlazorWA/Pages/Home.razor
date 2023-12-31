@@ -51,12 +51,11 @@
 
     private string Output { get; set; } = "";
 
-    public string URL = "https://www.vdab.be/vindeenjob/vacatures/68015340/junior-back-end-software-developer?source=vindeenjob&medium=vacaturedashboard";
+    public string URL = "https://www.vdab.be/vindeenjob/vacatures/67057836/full-stack-developer?source=vindeenjob&medium=vacaturedashboard&classname=vej-results";
 
     protected override async Task OnInitializedAsync()
     {
-        //Output = await scrapeApi.GetString("https://www.vdab.be/vindeenjob/vacatures?sort=standaard", "vej-results");
-
+        Output = await scrapeApi.GetString(URL);
 
     }
 
@@ -64,7 +63,7 @@
     {
         // var className = "vej-results";
         
-        Output = await scrapeApi.GetOutput(URL);
+        Output = await scrapeApi.GetString(URL);
     }
 
     public void Check(string url, int domainId)
