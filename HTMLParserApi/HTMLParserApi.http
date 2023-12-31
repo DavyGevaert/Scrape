@@ -1,0 +1,6 @@
+@HTMLParserApi_HostAddress = http://localhost:5069
+
+GET {{HTMLParserApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

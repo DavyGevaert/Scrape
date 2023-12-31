@@ -12,7 +12,7 @@ namespace Scrape.Model
         {
             Vacancies = new List<Vacancy>();
         }
-
+        public int Id { get; set; }
         public string URL { get; set; }
 
         public string Title { get; set; }

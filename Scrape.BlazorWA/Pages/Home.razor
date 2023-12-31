@@ -2,9 +2,16 @@
 
 
 
+@using Infrastructuur.DTO
+@using Newtonsoft.Json
 @using Scrape.Model
 @using Scrape.Data.Helpers
+@using System.Diagnostics
+@using System.Text
 
+@using Infrastructuur.Mappers;
+
+@inject HttpClient httpClient
 @inject Data data;
 @inject HTMLRequest request;
 
@@ -41,38 +48,27 @@
     </div>
 </div>
 
-@foreach (var vac in Vacancies)
-{   
-    <div>
-        @vac.Title
-    </div>
-}
+<div class="row mt-5">
+    @foreach (var vac in Vacancies)
+    {
+        <div class="col-3 mb-5">
+            <div class="container">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Id:</strong> @vac.Id</h5>
+                        <p class="card-text"><strong>Description:</strong> @vac.Description.Substring(0,150) ...</p>
+                        <a href="#" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
-
-<script>
-    const puppeteer = require('puppeteer');
-
-    (async () => {
-        try {
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-            await page.goto('https://www.vdab.be/vindeenjob/vacatures?sort=standaard&jobdomein=JOBCAT10');
-            await page.waitForSelector('.body', { timeout: 1000 });
-
-            const body = await page.evaluate(() => {
-                return document.querySelector('body').innerHTML;
-            });
-            console.log(body);
-
-            await browser.close();
-        } catch (error) {
-            console.log(error);
-        }
-    })();
-</script>
 
 
 @code {
+
     private SearchPattern SearchPattern { get; set; } = new SearchPattern();
 
     private List<string> CheckedDomains { get; set; } = new List<string>();
@@ -81,13 +77,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-
+        try
+        {
+            //responsemessage
+            var response = await httpClient.GetAsync("https://localhost:7138/api/scrape/Parser");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = JsonConvert.DeserializeObject<List<VacancyDescriptionDto>>(await response.Content.ReadAsStringAsync());
+                Vacancies.AddRange(data.Select(x => VacancyMapper.MapToVacancy(x)));
+            }
+        }
+        catch (Exception ex)
+        {
+            //scrapedData = "Error: " + ex.Message;
+        }
+        // ScrapedData = await httpClient.GetFromJsonAsync<string>("Parser") ?? "empty data";
         // set standard URL VDAB website search vacancies
         SearchPattern.URL = "https://www.vdab.be/vindeenjob/vacatures?sort=standaard";
-
         // await ScrapeWebsite("https://www.vdab.be/vindeenjob/vacatures?sort=standaard&jobdomein=JOBCAT10");
-
     }
 
     private string Page { get; set; } = "";
