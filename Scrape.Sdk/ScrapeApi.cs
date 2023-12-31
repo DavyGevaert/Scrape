@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.Json;
 using System.Text;
+using Scrape.Model;
 
 namespace Scrape.Sdk
 {
@@ -20,15 +21,16 @@ namespace Scrape.Sdk
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<string> GetOutput(string url, string className)
+        public async Task<string> GetString(string url, string className)
         {
             var httpClient = _httpClientFactory.CreateClient("Scrape");
 
             var route = $"/Scrape/Get?url={url}&className={className}";   // zelfde als route in Swagger UI
 
+
             var httpResponse = await httpClient.GetAsync(route);
 
-            var x = httpResponse.EnsureSuccessStatusCode();
+            httpResponse.EnsureSuccessStatusCode();
 
             var result = await httpResponse.Content.ReadAsStringAsync();
 

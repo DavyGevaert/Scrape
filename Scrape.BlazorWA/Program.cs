@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Options;
 using Scrape.BlazorWA;
 using Scrape.BlazorWA.Settings;
 using Scrape.Data.Helpers;

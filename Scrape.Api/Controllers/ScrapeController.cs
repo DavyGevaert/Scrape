@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using Scrape.Model;
 
 namespace Scrape.Api.Controllers
 {
     public class ScrapeController : ApiBaseController
     {
         [HttpGet("Get")]
-        public async Task<string> Output_Of_Scrape_Website(string url, string className)
+        public async Task<Vacancy> Output_Of_Scrape_Website(string url, string className)
         {
+            Vacancy vacancy = new Vacancy();
             var output = "";
 
             ChromeOptions options = new ChromeOptions();
@@ -36,6 +38,8 @@ namespace Scrape.Api.Controllers
                     Console.WriteLine(productElement.Text);
 
                     output = productElement.Text;
+
+                    vacancy.Description = output;
                     
                 }
                 catch (Exception ex)
@@ -45,7 +49,7 @@ namespace Scrape.Api.Controllers
             }
 
 
-            return output;
+            return vacancy;
         }
     }
 }

@@ -16,8 +16,6 @@
 
 <h1>Vind een job:</h1>
 
-<div>@SearchPattern.URL</div>
-
 <div class="clearfix">
     @foreach (var str in CheckedDomains)
     {
@@ -35,20 +33,13 @@
             
     @foreach (var row in data.GetDomains())
     {
-            <div class="dropdown-item" @onclick="() => Check(row.Domain.Id)">                
+            <div class="dropdown-item" @onclick="() => Check(URL, row.Domain.Id)">
                 &nbsp;@row.Domain.Title
             </div>
     }
 
     </div>
 </div>
-
-@foreach (var vac in Vacancies)
-{   
-    <div>
-        @vac.Title
-    </div>
-}
 
 @if (Output is null)
 {
@@ -61,37 +52,36 @@ else
 
 
 @code {
-    private SearchPattern SearchPattern { get; set; } = new SearchPattern();
-
     private List<string> CheckedDomains { get; set; } = new List<string>();
 
-    private List<Vacancy> Vacancies = new List<Vacancy>();
+    private string Output { get; set; } = "";
 
-    private string Output { get; set; }
+    public string URL = "https://www.vdab.be/vindeenjob/vacatures/68015340/junior-back-end-software-developer?source=vindeenjob&medium=vacaturedashboard";
 
     protected override async Task OnInitializedAsync()
     {
-        
+        Output = await scrapeApi.GetString("https://www.vdab.be/vindeenjob/vacatures?sort=standaard", "vej-results");
+
     }
 
     public async void ScrapeWebsite()
     {
         var className = "vej-results";
-                
-        Output = await scrapeApi.GetOutput("https://www.vdab.be/vindeenjob/vacatures/68015340/junior-back-end-software-developer?source=vindeenjob&medium=vacaturedashboard", className);
+        
+        Output = await scrapeApi.GetString(URL, className);
     }
 
-    public async Task Check(int domainId)
+    public void Check(string url, int domainId)
     {         
 
         // loop through domains
         foreach (var row in data.GetDomains().Where(r => r.Domain.Id == domainId))
         {
-            // if SearchPattern.URL has specific domain URLPattern
-            if (SearchPattern.URL.Contains(row.Domain.URLPattern))
+            // if URL has specific domain URLPattern
+            if (URL.Contains(row.Domain.URLPattern))
             {
                 // replace that domain URLPattern with empty string
-                SearchPattern.URL = SearchPattern.URL.Replace(row.Domain.URLPattern, "");
+                URL = URL.Replace(row.Domain.URLPattern, "");
             }
             else
             {
