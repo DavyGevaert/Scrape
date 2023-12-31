@@ -6,6 +6,7 @@
 @using OpenQA.Selenium;
 @using OpenQA.Selenium.Chrome;
 @using Scrape.Sdk
+@using System.Net
 
 @inject Data data;
 @inject ScrapeApi scrapeApi;
@@ -41,14 +42,8 @@
     </div>
 </div>
 
-@if (Output is null)
-{
-    <div>Output is loading ...</div>
-}
-else
-{
+
     <p>@Output</p>
-}
 
 
 @code {
@@ -60,15 +55,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Output = await scrapeApi.GetString("https://www.vdab.be/vindeenjob/vacatures?sort=standaard", "vej-results");
+        //Output = await scrapeApi.GetString("https://www.vdab.be/vindeenjob/vacatures?sort=standaard", "vej-results");
+
 
     }
 
     public async void ScrapeWebsite()
     {
-        var className = "vej-results";
+        // var className = "vej-results";
         
-        Output = await scrapeApi.GetString(URL, className);
+        Output = await scrapeApi.GetOutput(URL);
     }
 
     public void Check(string url, int domainId)

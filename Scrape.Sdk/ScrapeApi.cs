@@ -41,5 +41,25 @@ namespace Scrape.Sdk
 
             return result;
         }
+        public async Task<string> GetOutput(string url)
+        {
+            var httpClient = _httpClientFactory.CreateClient("Scrape");
+
+            var route = $"/Scrape/Get?url={url}";   // zelfde als route in Swagger UI
+
+
+            var httpResponse = await httpClient.GetAsync(route);
+
+            httpResponse.EnsureSuccessStatusCode();
+
+            var result = await httpResponse.Content.ReadAsStringAsync();
+
+            if (result is null)
+            {
+                return "";
+            }
+
+            return result;
+        }
     }
 }
